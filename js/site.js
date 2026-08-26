@@ -1,8 +1,8 @@
 const SITE = {
-  name: "Pelican Water Pros",
-  phone: "(225) 555-0147",
-  phoneHref: "tel:+12255550147",
-  email: "hello@pelicanwaterpros.com",
+  name: "Capital Water Co.",
+  phone: "(225)-831-7583",
+  phoneHref: "tel:+12258317583",
+  email: "support@capitalwaterco.com",
   city: "Baton Rouge, LA",
   wiki: "https://en.wikipedia.org/wiki/Baton_Rouge,_Louisiana",
 };
@@ -86,22 +86,56 @@ function root() {
   return document.body.dataset.root || "./";
 }
 
+function loadChatWidget() {
+  const widgetId = "699c55846e6009ac92f893b2";
+  if (window.__pwpChatScheduled) return;
+  window.__pwpChatScheduled = true;
+
+  const start = () => {
+    if (window.__pwpChatLoaded) return;
+    window.__pwpChatLoaded = true;
+    const script = document.createElement("script");
+    script.src = "https://widgets.leadconnectorhq.com/loader.js";
+    script.async = true;
+    script.setAttribute("data-resources-url", "https://widgets.leadconnectorhq.com/chat-widget/loader.js");
+    script.setAttribute("data-widget-id", widgetId);
+    document.body.appendChild(script);
+  };
+
+  const onInteract = () => {
+    ["pointerdown", "keydown", "scroll", "touchstart"].forEach((eventName) => {
+      window.removeEventListener(eventName, onInteract);
+    });
+    start();
+  };
+
+  ["pointerdown", "keydown", "scroll", "touchstart"].forEach((eventName) => {
+    window.addEventListener(eventName, onInteract, { once: true, passive: true });
+  });
+
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(start, { timeout: 4000 });
+  } else {
+    setTimeout(start, 2500);
+  }
+}
+
 function headerHTML() {
   const r = root();
-  const home = r + "index.html";
+  const home = "/";
   return `
   <div class="topbar">
     <a href="${SITE.phoneHref}">${ICONS.phone}<span data-phone>${SITE.phone}</span></a>
   </div>
   <header class="site-header">
     <div class="wrap nav-row">
-      <a class="logo" href="${home}"><img src="${r}images/logo.png?v=9" alt="Pelican Water Pros"></a>
+      <a class="logo" href="${home}"><img src="${r}images/logo.png?v=11" alt="Capital Water Co." width="236" height="69" decoding="async"></a>
       <button class="menu-toggle" aria-label="Menu Toggle" aria-expanded="false"><span></span><span></span><span></span></button>
       <div class="nav-wrap">
         <ul class="nav">
           <li><a href="${home}#process">Process</a></li>
           <li>
-            <a href="${r}services/index.html">Services <svg class="caret" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></a>
+            <a href="/services/">Services <svg class="caret" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></a>
             <ul class="dropdown">
               <li><a href="${r}services/whole-home-water-filtration.html">Whole-Home Water Filtration Services</a></li>
               <li><a href="${r}services/reverse-osmosis.html">Reverse Osmosis Drinking Water Systems</a></li>
@@ -112,7 +146,7 @@ function headerHTML() {
             </ul>
           </li>
           <li>
-            <a href="${r}service-areas/index.html">Service Areas <svg class="caret" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></a>
+            <a href="/service-areas/">Service Areas <svg class="caret" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></a>
             <ul class="dropdown">
               ${AREAS.map((parish) => `<li><a href="${r}service-areas/${parish.slug}">${parish.name}</a></li>`).join("")}
             </ul>
@@ -129,7 +163,7 @@ function headerHTML() {
 
 function footerHTML() {
   const r = root();
-  const home = r + "index.html";
+  const home = "/";
   return `
   <section class="contact-section" id="contact">
     <div class="wrap contact-panel">
@@ -187,10 +221,15 @@ function footerHTML() {
           <span>Message <em>*</em></span>
           <textarea name="message" placeholder="Message *" required></textarea>
         </label>
+        <input class="hp" type="text" name="crm_hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="form-actions">
           <button class="btn" type="submit">Submit</button>
         </div>
-        <div class="form-success">Thanks! We received your request and will be in touch shortly.</div>
+        <div class="form-success" role="status">
+          <strong>Thank you for submitting</strong>
+          <span>We’ll be in touch shortly.</span>
+        </div>
+        <div class="form-error">We could not send your request. Please call us or try again.</div>
       </form>
     </div>
   </section>
@@ -200,8 +239,8 @@ function footerHTML() {
         <div>
           <h6>Quick Links</h6>
           <ul>
-            <li><a href="${r}services/index.html">Services</a></li>
-            <li><a href="${r}service-areas/index.html">Service Areas</a></li>
+            <li><a href="/services/">Services</a></li>
+            <li><a href="/service-areas/">Service Areas</a></li>
             <li><a href="${home}#about">About Us</a></li>
             <li><a href="${home}#process">How It Works</a></li>
             <li><a href="${home}#reviews">Reviews</a></li>
@@ -226,7 +265,7 @@ function footerHTML() {
         </div>
       </div>
       <div class="legal">
-        <span>© ${new Date().getFullYear()} Pelican Water Pros. All rights reserved.</span>
+        <span>© ${new Date().getFullYear()} Capital Water Co. All rights reserved.</span>
         <div class="socials">
           <a href="#" aria-label="Facebook"><svg viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91V127.89c0-25.35 12.42-50.06 52.24-50.06H293V6.26S259.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg></a>
           <a href="#" aria-label="Instagram"><svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8s-26.8-12-26.8-26.8 12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9S356.6 9 320.7 7.3C284.6 5.5 163.5 5.5 127.4 7.3 91.5 9 59.7 17.2 33.5 43.4S1.7 98.4 0 134.3C-1.8 170.4-1.8 291.5 0 327.6c1.7 35.9 9.9 67.7 36.2 93.9s58 34.5 93.9 36.2c36.1 1.8 157.2 1.8 193.3 0 35.9-1.7 67.7-9.9 93.9-36.2s34.5-58 36.2-93.9c1.8-36.1 1.8-157.2 0-193.3z"/></svg></a>
@@ -241,7 +280,7 @@ function footerHTML() {
 function heroFormHTML() {
   return `
     <div class="form-card">
-      <p class="kicker">Request A <span style="text-decoration:underline"><strong>FREE</strong></span></p>
+      <p class="kicker">Request A <span>FREE</span></p>
       <p class="form-title">Consultation Today!</p>
       <form class="js-form" data-form="hero">
         <select name="service" required>
@@ -253,13 +292,40 @@ function heroFormHTML() {
           <option>Well Water Treatment Systems</option>
           <option>City Water Treatment Systems</option>
         </select>
-        <input type="text" name="address" placeholder="Enter Full Address*" required>
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="tel" name="phone" placeholder="Phone" required>
-        <input type="email" name="email" placeholder="Email" required>
+        <label class="form-field">
+          <span class="form-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11.2A7 7 0 0 0 5 9.8C5 15.6 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.2"/></svg></span>
+          <input type="text" name="address" placeholder="Enter Full Address*" required>
+        </label>
+        <label class="form-field">
+          <span class="form-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.4 19.2c.8-3.2 3.4-5 6.6-5s5.8 1.8 6.6 5"/></svg></span>
+          <input type="text" name="name" placeholder="Name" required>
+        </label>
+        <label class="form-field">
+          <span class="form-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7.2 4.8h3.1l1.2 3.1-2 1.2a12.4 12.4 0 0 0 5.4 5.4l1.2-2 3.1 1.2v3.1c0 .7-.6 1.4-1.4 1.4C10.8 18.2 5.8 13.2 5.8 6.2c0-.8.7-1.4 1.4-1.4z"/></svg></span>
+          <input type="tel" name="phone" placeholder="Phone" required>
+        </label>
+        <label class="form-field">
+          <span class="form-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="m5 8 7 5 7-5"/></svg></span>
+          <input type="email" name="email" placeholder="Email" required>
+        </label>
+        <div class="form-consent">
+          <label class="consent-option">
+            <input type="checkbox" name="smsTransactionalConsent" value="true">
+            <span>I consent to receive non-marketing text messages from Capital Water Co. regarding my inquiry, appointments, estimates, and service updates. Message frequency varies. Message &amp; data rates may apply. Reply STOP to opt out or HELP for help.</span>
+          </label>
+          <label class="consent-option">
+            <input type="checkbox" name="smsMarketingConsent" value="true">
+            <span>I consent to receive marketing text messages from Capital Water Co. about special offers, promotions, and services. Message frequency varies. Message &amp; data rates may apply. Reply STOP to opt out or HELP for help.</span>
+          </label>
+        </div>
+        <input class="hp" type="text" name="crm_hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="btn" type="submit">${ICONS.arrow} Get A Free Consultation</button>
-        <p class="disclaimer">By pressing 'Get A Free Consultation' you are agreeing to our <a href="${root()}terms.html">terms and conditions</a> and <a href="${root()}privacy.html">privacy policy</a>, and consenting to receive text messages. To unsubscribe, text STOP to ${SITE.phone}.</p>
-        <div class="form-success">Thanks! We received your request and will be in touch shortly.</div>
+        <p class="disclaimer">By submitting this form, you agree to our <a href="${root()}terms.html">Terms &amp; Conditions</a> and acknowledge our <a href="${root()}privacy.html">Privacy Policy</a>.</p>
+        <div class="form-success" role="status">
+          <strong>Thank you for submitting</strong>
+          <span>We’ll be in touch shortly.</span>
+        </div>
+        <div class="form-error">We could not send your request. Please call us or try again.</div>
       </form>
       <div class="trust-row">
         <span>GOOGLE</span>
@@ -311,11 +377,43 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelectorAll(".js-form").forEach((form) => {
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const success = form.querySelector(".form-success");
-      if (success) success.style.display = "block";
-      form.reset();
+      const error = form.querySelector(".form-error");
+      const button = form.querySelector("button[type=submit]");
+      if (success) success.style.display = "none";
+      if (error) error.style.display = "none";
+      if (button) button.disabled = true;
+
+      const payload = Object.fromEntries(new FormData(form).entries());
+      payload.source = form.dataset.form || "website";
+      const transactional = form.querySelector('input[name="smsTransactionalConsent"]');
+      const marketing = form.querySelector('input[name="smsMarketingConsent"]');
+      if (transactional) payload.smsTransactionalConsent = transactional.checked;
+      if (marketing) payload.smsMarketingConsent = marketing.checked;
+
+      try {
+        const res = await fetch("/.netlify/functions/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error("submit failed");
+        form.classList.add("is-sent");
+        if (success) {
+          success.style.display = "";
+          success.focus?.();
+        }
+        form.querySelectorAll("input, select, textarea, button").forEach((el) => {
+          el.disabled = true;
+        });
+      } catch {
+        if (error) error.style.display = "block";
+        if (button) button.disabled = false;
+      }
     });
   });
+
+  loadChatWidget();
 });
