@@ -3,6 +3,10 @@ const SITE = {
   phone: "(225)-831-7583",
   phoneHref: "tel:+12258317583",
   email: "support@capitalwaterco.com",
+  address: "38489 Parliament Dr. Prairieville, LA 70769",
+  addressLine1: "38489 Parliament Dr.",
+  addressLine2: "Prairieville, LA 70769",
+  mapsHref: "https://www.google.com/maps/search/?api=1&query=38489+Parliament+Dr.+Prairieville,+LA+70769",
   city: "Baton Rouge, LA",
   wiki: "https://en.wikipedia.org/wiki/Baton_Rouge,_Louisiana",
 };
@@ -12,7 +16,7 @@ const AREAS = [
     name: "East Baton Rouge Parish, LA",
     slug: "east-baton-rouge-parish/",
     cities: [
-      ["Baton Rouge, LA", "east-baton-rouge-parish/baton-rouge/"],
+      ["Baton Rouge, LA", "/baton-rouge-water-filtration/"],
       ["Zachary, LA", "east-baton-rouge-parish/zachary/"],
       ["Baker, LA", "east-baton-rouge-parish/baker/"],
       ["Central, LA", "east-baton-rouge-parish/central/"],
@@ -58,7 +62,7 @@ const AREAS = [
     name: "Orleans Parish, LA",
     slug: "orleans-parish/",
     cities: [
-      ["New Orleans, LA", "orleans-parish/new-orleans/"],
+      ["New Orleans, LA", "/new-orleans-water-filtration/"],
     ],
   },
   {
@@ -76,6 +80,8 @@ const ICONS = {
     '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z"/></svg>',
   mail:
     '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>',
+  pin:
+    '<svg viewBox="0 0 384 512" aria-hidden="true"><path d="M215.7 499.2C267 435 384 279.4 384 192 384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>',
   arrow:
     '<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"/></svg>',
   check:
@@ -86,8 +92,14 @@ function root() {
   return document.body.dataset.root || "./";
 }
 
+function isLanding() {
+  return document.body.classList.contains("is-landing") || document.body.dataset.landing === "true";
+}
+
 function loadChatWidget() {
-  const widgetId = "699c55846e6009ac92f893b2";
+  if (document.getElementById("hero-form")) return;
+
+  const widgetId = "6aa6a32b8eb25ab4ca154be1";
   if (window.__pwpChatScheduled) return;
   window.__pwpChatScheduled = true;
 
@@ -99,6 +111,7 @@ function loadChatWidget() {
     script.async = true;
     script.setAttribute("data-resources-url", "https://widgets.leadconnectorhq.com/chat-widget/loader.js");
     script.setAttribute("data-widget-id", widgetId);
+    script.setAttribute("data-source", "WEB_USER");
     document.body.appendChild(script);
   };
 
@@ -123,13 +136,25 @@ function loadChatWidget() {
 function headerHTML() {
   const r = root();
   const home = "/";
+  if (isLanding()) {
+    return `
+  <div class="topbar">
+    <a href="${SITE.phoneHref}">${ICONS.phone}<span data-phone>${SITE.phone}</span></a>
+  </div>
+  <header class="site-header">
+    <div class="wrap nav-row">
+      <span class="logo"><img src="${r}images/logo.png?v=12" alt="Capital Water Co." width="248" height="68" decoding="async"></span>
+      <a class="btn header-cta" href="${SITE.phoneHref}">${ICONS.phone} Call ${SITE.phone}</a>
+    </div>
+  </header>`;
+  }
   return `
   <div class="topbar">
     <a href="${SITE.phoneHref}">${ICONS.phone}<span data-phone>${SITE.phone}</span></a>
   </div>
   <header class="site-header">
     <div class="wrap nav-row">
-      <a class="logo" href="${home}"><img src="${r}images/logo.png?v=11" alt="Capital Water Co." width="236" height="69" decoding="async"></a>
+      <a class="logo" href="${home}"><img src="${r}images/logo.png?v=12" alt="Capital Water Co." width="248" height="68" decoding="async"></a>
       <button class="menu-toggle" aria-label="Menu Toggle" aria-expanded="false"><span></span><span></span><span></span></button>
       <div class="nav-wrap">
         <ul class="nav">
@@ -148,6 +173,8 @@ function headerHTML() {
           <li>
             <a href="/service-areas/">Service Areas <svg class="caret" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></a>
             <ul class="dropdown">
+              <li><a href="/baton-rouge-water-filtration/">Baton Rouge Water Filtration</a></li>
+              <li><a href="/new-orleans-water-filtration/">New Orleans Water Filtration</a></li>
               ${AREAS.map((parish) => `<li><a href="${r}service-areas/${parish.slug}">${parish.name}</a></li>`).join("")}
             </ul>
           </li>
@@ -164,6 +191,48 @@ function headerHTML() {
 function footerHTML() {
   const r = root();
   const home = "/";
+  if (isLanding()) {
+    return `
+  <section class="contact-section" id="contact">
+    <div class="wrap contact-panel contact-panel-solo">
+      <div class="contact-copy">
+        <h2>Get In Touch With Us</h2>
+        <p>Call us or use the chat to request a free consultation. We're here to help!</p>
+        <div class="contact-meta">
+          <a class="contact-item" href="${SITE.phoneHref}">
+            <span class="contact-icon">${ICONS.phone}</span>
+            <span>
+              <strong>Phone Number</strong>
+              <span class="contact-value" data-phone>${SITE.phone}</span>
+            </span>
+          </a>
+          <a class="contact-item" href="mailto:${SITE.email}">
+            <span class="contact-icon">${ICONS.mail}</span>
+            <span>
+              <strong>Email</strong>
+              <span class="contact-value">${SITE.email}</span>
+            </span>
+          </a>
+          <a class="contact-item" href="${SITE.mapsHref}" target="_blank" rel="noopener noreferrer">
+            <span class="contact-icon">${ICONS.pin}</span>
+            <span>
+              <strong>Address</strong>
+              <span class="contact-value">${SITE.addressLine1}<br>${SITE.addressLine2}</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="wrap">
+      <div class="legal">
+        <span>© ${new Date().getFullYear()} Capital Water Co. All rights reserved.</span>
+        <span><a href="${r}privacy.html">Privacy Policy</a> · <a href="${r}terms.html">Terms &amp; Conditions</a></span>
+      </div>
+    </div>
+  </footer>`;
+  }
   return `
   <section class="contact-section" id="contact">
     <div class="wrap contact-panel">
@@ -185,6 +254,13 @@ function footerHTML() {
               <span class="contact-value">${SITE.email}</span>
             </span>
           </a>
+          <a class="contact-item" href="${SITE.mapsHref}" target="_blank" rel="noopener noreferrer">
+            <span class="contact-icon">${ICONS.pin}</span>
+            <span>
+              <strong>Address</strong>
+              <span class="contact-value">${SITE.addressLine1}<br>${SITE.addressLine2}</span>
+            </span>
+          </a>
         </div>
       </div>
       <form class="contact-form js-form" data-form="footer">
@@ -197,13 +273,9 @@ function footerHTML() {
           <span>Enter Full Address <em>*</em></span>
           <input type="text" name="address" placeholder="Enter Full Address *" required>
         </label>
-        <label class="field">
+        <label class="field field-full">
           <span>Email <em>*</em></span>
           <input type="email" name="email" placeholder="Email *" required>
-        </label>
-        <label class="field">
-          <span>Phone <em>*</em></span>
-          <input type="tel" name="phone" placeholder="Phone *" required>
         </label>
         <label class="field field-full">
           <span>Choose Service <em>*</em></span>
@@ -260,6 +332,8 @@ function footerHTML() {
         <div>
           <h6>Service Areas</h6>
           <ul class="city-cols">
+            <li><a href="/baton-rouge-water-filtration/">Baton Rouge Water Filtration</a></li>
+            <li><a href="/new-orleans-water-filtration/">New Orleans Water Filtration</a></li>
             ${AREAS.map((parish) => `<li><a href="${r}service-areas/${parish.slug}">${parish.name}</a></li>`).join("")}
           </ul>
         </div>
@@ -416,4 +490,55 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   loadChatWidget();
+  initScrollEffects();
 });
+
+function initScrollEffects() {
+  const header = document.querySelector(".site-header");
+  const hero = document.querySelector(".hero");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const onScroll = () => {
+    const y = window.scrollY || 0;
+    if (header) header.classList.toggle("is-scrolled", y > 18);
+    if (hero && !reduceMotion && window.innerWidth > 860) {
+      hero.style.setProperty("--hero-shift", `${Math.round(Math.min(y * 0.16, 72))}px`);
+    }
+  };
+
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  if (reduceMotion || !("IntersectionObserver" in window)) return;
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        io.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
+  );
+
+  const watch = (nodes, stagger = 0, extraClass = "") => {
+    nodes.forEach((el, i) => {
+      if (el.closest(".hero")) return;
+      el.classList.add("reveal");
+      if (extraClass) el.classList.add(extraClass);
+      if (stagger) el.style.setProperty("--reveal-delay", `${Math.min(i * stagger, 420)}ms`);
+      io.observe(el);
+    });
+  };
+
+  watch(document.querySelectorAll(".section .eyebrow, .section h2, .section .lede, .section .center-cta"));
+  watch(document.querySelectorAll(".process-card"), 110);
+  watch(document.querySelectorAll(".card"), 90);
+  watch(document.querySelectorAll(".review"), 100);
+  watch(document.querySelectorAll(".faq details"), 70);
+  watch(document.querySelectorAll(".photo"));
+  watch(document.querySelectorAll(".contact-copy"), 0, "from-left");
+  watch(document.querySelectorAll(".content-block, .contact-form"), 0, "from-right");
+  watch(document.querySelectorAll(".checks-block li, .bullets li"), 45);
+}

@@ -28,3 +28,27 @@
   to = "/:splat/"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/service-areas/east-baton-rouge-parish/baton-rouge"
+  to = "/baton-rouge-water-filtration/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/service-areas/east-baton-rouge-parish/baton-rouge/"
+  to = "/baton-rouge-water-filtration/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/service-areas/orleans-parish/new-orleans"
+  to = "/new-orleans-water-filtration/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/service-areas/orleans-parish/new-orleans/"
+  to = "/new-orleans-water-filtration/"
+  status = 301
+  force = true

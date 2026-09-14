@@ -113,6 +113,15 @@ textarea {
   background: #03111f;
   box-shadow: none;
   border-bottom: 1px solid rgba(35, 105, 155, 0.2);
+  transition: background-color 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.site-header.is-scrolled {
+  background: rgba(3, 17, 31, 0.92);
+  backdrop-filter: saturate(1.15) blur(14px);
+  -webkit-backdrop-filter: saturate(1.15) blur(14px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
+  border-bottom-color: rgba(0, 163, 255, 0.28);
 }
 
 .nav-row {
@@ -121,6 +130,11 @@ textarea {
   justify-content: space-between;
   gap: 36px;
   min-height: var(--header-h);
+  transition: min-height 0.28s ease;
+}
+
+.site-header.is-scrolled .nav-row {
+  min-height: 74px;
 }
 
 .logo {
@@ -132,9 +146,9 @@ textarea {
 }
 
 .logo img {
-  width: 236px;
+  width: 248px;
   height: auto;
-  max-width: min(236px, calc(100vw - 120px));
+  max-width: min(248px, calc(100vw - 120px));
   object-fit: contain;
   object-position: left center;
 }
@@ -334,6 +348,7 @@ textarea {
     linear-gradient(180deg, rgba(2, 26, 51, 0.78), rgba(0, 21, 41, 0.86)),
     url("../images/hero-water.jpg")
       center / cover no-repeat;
+  background-position: center calc(50% + var(--hero-shift, 0px));
   color: #fff;
   padding: 60px 0;
 }
@@ -342,6 +357,7 @@ textarea {
   background:
     linear-gradient(90deg, rgba(0, 8, 18, 0.62) 0%, rgba(0, 8, 18, 0.28) 46%, rgba(0, 8, 18, 0.12) 100%),
     url("../images/hero-water.jpg") right center / cover no-repeat;
+  background-position: right calc(50% + var(--hero-shift, 0px));
 }
 
 .hero-grid {
@@ -362,10 +378,11 @@ textarea {
 .hero h1::after {
   content: "";
   display: block;
-  width: 88px;
+  width: 0;
   height: 3px;
   margin-top: 16px;
   background: linear-gradient(90deg, var(--accent), transparent);
+  animation: line-grow 0.7s 0.45s ease forwards;
 }
 
 .hero p.lead {
@@ -673,6 +690,7 @@ textarea:focus {
   align-items: start;
 }
 
+.section h1,
 h2 {
   font-size: clamp(1.9rem, 3vw, 3rem);
   line-height: 1.2;
@@ -681,8 +699,11 @@ h2 {
   color: inherit;
 }
 
+.ice h1,
 .ice h2,
+.white h1,
 .white h2,
+body > .section:not(.navy) h1,
 body > .section:not(.navy) h2 {
   color: var(--navy);
 }
@@ -1147,7 +1168,7 @@ body > .section:not(.navy) h2 {
 
 .contact-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   color: #fff;
   width: fit-content;
@@ -1162,6 +1183,7 @@ body > .section:not(.navy) h2 {
   display: grid;
   place-items: center;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .contact-icon svg {
@@ -1467,7 +1489,7 @@ body > .section:not(.navy) h2 {
 .page-hero.whole-home-hero {
   background:
     linear-gradient(180deg, rgba(2, 26, 51, 0.58), rgba(0, 21, 41, 0.78)),
-    url("../images/whole-house-filtration.jpg") center 28% / cover no-repeat;
+    url("../images/whole-house-filtration.png") center 28% / cover no-repeat;
 }
 
 .page-hero.reverse-osmosis-hero {
@@ -1893,8 +1915,8 @@ body > .section:not(.navy) h2 {
   }
 
   .logo img {
-    width: 176px;
-    max-width: min(176px, calc(100vw - 108px));
+    width: 186px;
+    max-width: min(186px, calc(100vw - 108px));
   }
 
   .review-head {
@@ -1902,7 +1924,8 @@ body > .section:not(.navy) h2 {
     align-items: start;
   }
 
-  .card:hover {
+  .card:hover,
+  .card.reveal.is-in:hover {
     transform: none;
   }
 }
@@ -1918,5 +1941,118 @@ body > .section:not(.navy) h2 {
 
   .contact-form .btn {
     width: 100%;
+  }
+}
+
+/* Scroll effects */
+.hero-grid > * {
+  animation: rise-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-grid > *:nth-child(2) {
+  animation-delay: 0.14s;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.from-left {
+  transform: translate3d(-28px, 0, 0);
+}
+
+.reveal.from-right {
+  transform: translate3d(28px, 0, 0);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.card.reveal.is-in:hover {
+  transform: translateY(-5px);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes line-grow {
+  to {
+    width: 88px;
+  }
+}
+
+body.is-landing .menu-toggle,
+body.is-landing .nav-wrap {
+  display: none !important;
+}
+
+body.is-landing .header-cta {
+  display: inline-flex;
+}
+
+body.is-landing .hero-grid {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 760px;
+}
+
+body.is-landing .contact-panel,
+body.is-landing .contact-panel.contact-panel-solo {
+  grid-template-columns: 1fr;
+}
+
+body.is-landing .contact-copy {
+  max-width: 36rem;
+}
+
+body.is-landing .footer-links {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  body.is-landing .header-cta {
+    display: inline-flex;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-grid > *,
+  .hero h1::after {
+    animation: none;
+  }
+
+  .hero h1::after {
+    width: 88px;
+  }
+
+  .reveal,
+  .reveal.from-left,
+  .reveal.from-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .site-header,
+  .nav-row {
+    transition: none;
   }
 }
