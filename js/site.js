@@ -1,12 +1,19 @@
+const WATER_HEATER_NAV = [
+  ["/water-heaters/", "All Water Heater Services"],
+  ["/water-heater-replacement-baton-rouge/", "Water Heater Replacement"],
+  ["/water-heater-installation-baton-rouge/", "Water Heater Installation"],
+  ["/water-heater-repair-baton-rouge/", "Water Heater Repair"],
+  ["/tankless-water-heater-installation-baton-rouge/", "Tankless Water Heater Installation"],
+  ["/electric-water-heater-replacement-baton-rouge/", "Electric Water Heaters"],
+  ["/gas-water-heater-replacement-baton-rouge/", "Gas Water Heaters"],
+  ["/emergency-water-heater-replacement-baton-rouge/", "Emergency Water Heater Replacement"],
+];
+
 const SITE = {
   name: "Capital Water Co.",
   phone: "(225)-831-7583",
   phoneHref: "tel:+12258317583",
   email: "support@capitalwaterco.com",
-  address: "38489 Parliament Dr. Prairieville, LA 70769",
-  addressLine1: "38489 Parliament Dr.",
-  addressLine2: "Prairieville, LA 70769",
-  mapsHref: "https://www.google.com/maps/search/?api=1&query=38489+Parliament+Dr.+Prairieville,+LA+70769",
   city: "Baton Rouge, LA",
   wiki: "https://en.wikipedia.org/wiki/Baton_Rouge,_Louisiana",
 };
@@ -158,9 +165,9 @@ function headerHTML() {
       <button class="menu-toggle" aria-label="Menu Toggle" aria-expanded="false"><span></span><span></span><span></span></button>
       <div class="nav-wrap">
         <ul class="nav">
-          <li><a href="${home}#process">Process</a></li>
+          <li><a href="${home}">Home</a></li>
           <li>
-            <a href="/services/">Services <svg class="caret" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></a>
+            <a href="/services/">Water Filtration <svg class="caret" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></a>
             <ul class="dropdown">
               <li><a href="${r}services/whole-home-water-filtration.html">Whole-Home Water Filtration Services</a></li>
               <li><a href="${r}services/reverse-osmosis.html">Reverse Osmosis Drinking Water Systems</a></li>
@@ -171,15 +178,13 @@ function headerHTML() {
             </ul>
           </li>
           <li>
-            <a href="/service-areas/">Service Areas <svg class="caret" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></a>
-            <ul class="dropdown">
-              <li><a href="/baton-rouge-water-filtration/">Baton Rouge Water Filtration</a></li>
-              <li><a href="/new-orleans-water-filtration/">New Orleans Water Filtration</a></li>
-              ${AREAS.map((parish) => `<li><a href="${r}service-areas/${parish.slug}">${parish.name}</a></li>`).join("")}
+            <a href="/water-heaters/">Water Heaters <svg class="caret" viewBox="0 0 320 512"><path d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg></a>
+            <ul class="dropdown heater-dropdown">
+              ${WATER_HEATER_NAV.map(([href, label]) => `<li><a href="${href}">${label}</a></li>`).join("")}
             </ul>
           </li>
-          <li><a href="${home}#about">About Us</a></li>
-          <li><a href="${home}#reviews">Reviews</a></li>
+          <li><a href="${home}#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
         <a class="btn mobile-cta" href="#contact">${ICONS.arrow} Get A Free Consultation</a>
       </div>
@@ -197,7 +202,7 @@ function footerHTML() {
     <div class="wrap contact-panel contact-panel-solo">
       <div class="contact-copy">
         <h2>Get In Touch With Us</h2>
-        <p>Call us or use the chat to request a free consultation. We're here to help!</p>
+        <p>${document.body.classList.contains("ads-page") ? "Call us or use the form above to request a free consultation." : "Call us or use the chat to request a free consultation. We're here to help!"}</p>
         <div class="contact-meta">
           <a class="contact-item" href="${SITE.phoneHref}">
             <span class="contact-icon">${ICONS.phone}</span>
@@ -211,13 +216,6 @@ function footerHTML() {
             <span>
               <strong>Email</strong>
               <span class="contact-value">${SITE.email}</span>
-            </span>
-          </a>
-          <a class="contact-item" href="${SITE.mapsHref}" target="_blank" rel="noopener noreferrer">
-            <span class="contact-icon">${ICONS.pin}</span>
-            <span>
-              <strong>Address</strong>
-              <span class="contact-value">${SITE.addressLine1}<br>${SITE.addressLine2}</span>
             </span>
           </a>
         </div>
@@ -252,13 +250,6 @@ function footerHTML() {
             <span>
               <strong>Email</strong>
               <span class="contact-value">${SITE.email}</span>
-            </span>
-          </a>
-          <a class="contact-item" href="${SITE.mapsHref}" target="_blank" rel="noopener noreferrer">
-            <span class="contact-icon">${ICONS.pin}</span>
-            <span>
-              <strong>Address</strong>
-              <span class="contact-value">${SITE.addressLine1}<br>${SITE.addressLine2}</span>
             </span>
           </a>
         </div>
@@ -330,6 +321,12 @@ function footerHTML() {
           </ul>
         </div>
         <div>
+          <h6>Water Heater Services</h6>
+          <ul>
+            ${WATER_HEATER_NAV.map(([href, label]) => `<li><a href="${href}">${label}</a></li>`).join("")}
+          </ul>
+        </div>
+        <div>
           <h6>Service Areas</h6>
           <ul class="city-cols">
             <li><a href="/baton-rouge-water-filtration/">Baton Rouge Water Filtration</a></li>
@@ -349,6 +346,27 @@ function footerHTML() {
       </div>
     </div>
   </footer>`;
+}
+
+function captureAttribution() {
+  const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "gbraid", "wbraid"];
+  let stored = {};
+  try {
+    stored = JSON.parse(sessionStorage.getItem("cwc_attrib") || "{}");
+  } catch {
+    stored = {};
+  }
+  const params = new URLSearchParams(window.location.search);
+  keys.forEach((key) => {
+    const value = params.get(key);
+    if (value) stored[key] = value;
+  });
+  try {
+    sessionStorage.setItem("cwc_attrib", JSON.stringify(stored));
+  } catch {
+    /* ignore private-mode storage errors */
+  }
+  return stored;
 }
 
 function heroFormHTML() {
@@ -447,7 +465,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelectorAll(".dropdown a, .mobile-cta").forEach((link) => {
-    link.addEventListener("click", closeMenu);
+    link.addEventListener("click", () => {
+      const href = link.getAttribute("href") || "";
+      if (href.startsWith("#")) closeMenu();
+    });
   });
 
   document.querySelectorAll(".js-form").forEach((form) => {
@@ -461,7 +482,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (button) button.disabled = true;
 
       const payload = Object.fromEntries(new FormData(form).entries());
-      payload.source = form.dataset.form || "website";
+      const pageSource = (document.body.dataset.formSource || "").trim();
+      payload.formName = form.dataset.form || "website";
+      payload.formPlacement = form.classList.contains("contact-form") ? "footer" : "hero";
+      payload.source = pageSource || payload.formName;
+      payload.pagePath = window.location.pathname;
+      payload.pageUrl = window.location.href;
+      Object.assign(payload, captureAttribution());
       const transactional = form.querySelector('input[name="smsTransactionalConsent"]');
       const marketing = form.querySelector('input[name="smsMarketingConsent"]');
       if (transactional) payload.smsTransactionalConsent = transactional.checked;
@@ -473,7 +500,16 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error("submit failed");
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.error) {
+          throw new Error(data.error || "We could not send your request. Please call us or try again.");
+        }
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "lead_submit",
+          form: payload.source,
+          service: payload.service || "",
+        });
         form.classList.add("is-sent");
         if (success) {
           success.style.display = "";
@@ -482,13 +518,17 @@ document.addEventListener("DOMContentLoaded", () => {
         form.querySelectorAll("input, select, textarea, button").forEach((el) => {
           el.disabled = true;
         });
-      } catch {
-        if (error) error.style.display = "block";
+      } catch (err) {
+        if (error) {
+          error.textContent = err.message || "We could not send your request. Please call us or try again.";
+          error.style.display = "block";
+        }
         if (button) button.disabled = false;
       }
     });
   });
 
+  captureAttribution();
   loadChatWidget();
   initScrollEffects();
 });

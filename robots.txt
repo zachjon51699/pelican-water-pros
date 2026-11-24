@@ -1,3 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /water-heater-repair-baton-rouge/
+Disallow: /tankless-water-heater-installation-baton-rouge/
+Disallow: /gas-water-heater-replacement-baton-rouge/
+Disallow: /emergency-water-heater-replacement-baton-rouge/
+Disallow: /free-consultation/
 Sitemap: https://www.capitalwaterco.com/sitemap.xml

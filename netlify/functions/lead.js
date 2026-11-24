@@ -145,7 +145,28 @@ exports.handler = async (event) => {
   const address = String(fields.address || "").trim();
   const service = String(fields.service || "").trim();
   const message = String(fields.message || "").trim();
+  const heaterType = String(fields.heaterType || "").trim();
+  const heaterLocation = String(fields.heaterLocation || "").trim();
+  const zip = String(fields.zip || "").trim();
   const formSource = String(fields.source || "website").trim();
+  const formPlacement = String(fields.formPlacement || "").trim().toLowerCase();
+  const formName = String(fields.formName || "").trim();
+  const pagePath = String(fields.pagePath || "").trim();
+  const isWaterHeater =
+    String(fields.leadType || "").toLowerCase() === "water-heater" ||
+    /water[- ]heater/i.test(`${service} ${formSource} ${formName}`);
+  const isGoogleAds =
+    /google[\s-]?ads/i.test(formSource) ||
+    /\/free-consultation\/?/.test(pagePath) ||
+    Boolean(fields.gclid || fields.gbraid || fields.wbraid);
+  const contactSource = isWaterHeater
+    ? "Website - Water Heater"
+    : isGoogleAds
+      ? "Google Ads"
+      : "Capital Water Co. Website";
+  const isHero =
+    formPlacement === "hero" ||
+    (!formPlacement && (formSource === "hero" || formSource.startsWith("hero")));
   const smsFieldsPresent =
     Object.prototype.hasOwnProperty.call(fields, "smsTransactionalConsent") ||
     Object.prototype.hasOwnProperty.call(fields, "smsMarketingConsent");
@@ -167,8 +188,10 @@ exports.handler = async (event) => {
       phone,
       address1: address,
       country: "US",
-      source: "Capital Water Co. Website",
-      tags: ["Website Lead", formSource === "hero" ? "Hero Form" : "Contact Form"]
+      source: contactSource,
+      tags: ["Website Lead", isHero ? "Hero Form" : "Contact Form"]
+        .concat(isWaterHeater ? ["Website - Water Heater", "Water Heater Lead"] : [])
+        .concat(isGoogleAds ? ["Google Ads"] : [])
         .concat(service ? [service] : [])
         .concat(smsFieldsPresent && smsTransactional ? ["SMS Transactional Consent"] : [])
         .concat(smsFieldsPresent && smsMarketing ? ["SMS Marketing Consent"] : []),
@@ -199,9 +222,23 @@ exports.handler = async (event) => {
     const id = contactIdFrom(saved.data);
     const noteLines = [
       service && `Service: ${service}`,
+      heaterType && `Existing water heater: ${heaterType}`,
+      heaterLocation && `Installation location: ${heaterLocation}`,
       address && `Address: ${address}`,
+      zip && `ZIP: ${zip}`,
       message && `Message: ${message}`,
-      `Form: ${formSource}`,
+      `Source: ${contactSource}`,
+      `Form: ${formName || formSource}`,
+      formPlacement && `Form placement: ${formPlacement}`,
+      pagePath && `Page: ${pagePath}`,
+      fields.utm_source && `UTM source: ${fields.utm_source}`,
+      fields.utm_medium && `UTM medium: ${fields.utm_medium}`,
+      fields.utm_campaign && `UTM campaign: ${fields.utm_campaign}`,
+      fields.utm_term && `UTM term: ${fields.utm_term}`,
+      fields.utm_content && `UTM content: ${fields.utm_content}`,
+      fields.gclid && `gclid: ${fields.gclid}`,
+      fields.gbraid && `gbraid: ${fields.gbraid}`,
+      fields.wbraid && `wbraid: ${fields.wbraid}`,
       smsFieldsPresent && `SMS transactional consent: ${smsTransactional ? "Yes" : "No"}`,
       smsFieldsPresent && `SMS marketing consent: ${smsMarketing ? "Yes" : "No"}`,
     ].filter(Boolean);

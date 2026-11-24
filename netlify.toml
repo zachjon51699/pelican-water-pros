@@ -52,3 +52,28 @@
   to = "/new-orleans-water-filtration/"
   status = 301
   force = true
+
+[[headers]]
+  for = "/water-heater-repair-baton-rouge/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/tankless-water-heater-installation-baton-rouge/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/gas-water-heater-replacement-baton-rouge/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/emergency-water-heater-replacement-baton-rouge/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/free-consultation/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
