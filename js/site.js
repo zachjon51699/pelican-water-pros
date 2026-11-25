@@ -390,15 +390,15 @@ function heroFormHTML() {
         </label>
         <label class="form-field">
           <span class="form-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.4 19.2c.8-3.2 3.4-5 6.6-5s5.8 1.8 6.6 5"/></svg></span>
-          <input type="text" name="name" placeholder="Name" required>
+          <input type="text" name="name" placeholder="Name*" required>
         </label>
         <label class="form-field">
           <span class="form-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7.2 4.8h3.1l1.2 3.1-2 1.2a12.4 12.4 0 0 0 5.4 5.4l1.2-2 3.1 1.2v3.1c0 .7-.6 1.4-1.4 1.4C10.8 18.2 5.8 13.2 5.8 6.2c0-.8.7-1.4 1.4-1.4z"/></svg></span>
-          <input type="tel" name="phone" placeholder="Phone" required>
+          <input type="tel" name="phone" placeholder="Phone*" required>
         </label>
         <label class="form-field">
           <span class="form-field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="m5 8 7 5 7-5"/></svg></span>
-          <input type="email" name="email" placeholder="Email" required>
+          <input type="email" name="email" placeholder="Email*" required>
         </label>
         <div class="form-consent">
           <label class="consent-option">

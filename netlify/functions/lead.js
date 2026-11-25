@@ -125,9 +125,6 @@ exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 204, body: "" };
   if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed" });
 
-  const apiKey = envValue("GHL_API_KEY", "GHL_API_Token");
-  if (!apiKey) return json(500, { error: "Form delivery is not configured yet." });
-
   let fields = {};
   try {
     fields = JSON.parse(event.body || "{}");
@@ -155,7 +152,11 @@ exports.handler = async (event) => {
   const isWaterHeater =
     String(fields.leadType || "").toLowerCase() === "water-heater" ||
     /water[- ]heater/i.test(`${service} ${formSource} ${formName}`);
+  const isAdsLanding =
+    /^\/free-consultation(?:\/index\.html)?\/?$/.test(pagePath) &&
+    /google[\s-]?ads/i.test(formSource);
   const isGoogleAds =
+    isAdsLanding ||
     /google[\s-]?ads/i.test(formSource) ||
     /\/free-consultation\/?/.test(pagePath) ||
     Boolean(fields.gclid || fields.gbraid || fields.wbraid);
@@ -167,13 +168,19 @@ exports.handler = async (event) => {
   const isHero =
     formPlacement === "hero" ||
     (!formPlacement && (formSource === "hero" || formSource.startsWith("hero")));
+  const apiKey = isAdsLanding
+    ? envValue("GHL_ADS_API_KEY") || envValue("GHL_API_KEY", "GHL_API_Token")
+    : envValue("GHL_API_KEY", "GHL_API_Token");
+  if (!apiKey) return json(500, { error: "Form delivery is not configured yet." });
   const smsFieldsPresent =
     Object.prototype.hasOwnProperty.call(fields, "smsTransactionalConsent") ||
     Object.prototype.hasOwnProperty.call(fields, "smsMarketingConsent");
   const smsTransactional = isConsented(fields.smsTransactionalConsent);
   const smsMarketing = isConsented(fields.smsMarketingConsent);
 
-  if (!email && !phone) {
+  if ((isAdsLanding || isHero || isGoogleAds) && (!names.name || !email || !phone)) {
+    return json(400, { error: "Please include your name, phone number, and email." });
+  } else if (!email && !phone) {
     return json(400, { error: "Please include a phone number or email." });
   }
 

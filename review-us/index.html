@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Review Capital Water Co.</title>
+  <meta name="description" content="Rate your water filtration service with Capital Water Co. in Baton Rouge. Share a public Google review or send private feedback.">
+  <link rel="canonical" href="https://www.capitalwaterco.com/review-us/">
+  <meta name="robots" content="noindex, nofollow">
+  <meta property="og:title" content="Review Capital Water Co.">
+  <meta property="og:description" content="Rate your water filtration service with Capital Water Co. in Baton Rouge.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.capitalwaterco.com/review-us/">
+  <link rel="icon" href="../images/favicon.png?v=17" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=61">
+</head>
+<body class="review-page">
+  <a class="skip" href="#content">Skip to content</a>
+  <main id="content" class="review-stage">
+    <div class="review-panel">
+      <img class="review-logo" src="../images/logo.png?v=12" alt="Capital Water Co." width="248" height="68">
+      <p class="review-brand">Capital Water Co.</p>
+
+      <div id="rate-step">
+        <h1>How would you rate our water filtration service?</h1>
+        <p class="review-prompt">Rate us:</p>
+        <div class="review-choices" id="star-choices"></div>
+      </div>
+
+      <div id="feedback-step" hidden>
+        <h2>We’d love your feedback</h2>
+        <p class="review-note">Please tell us how we can improve. Your comments stay private — they won’t be posted as a public review.</p>
+        <form id="feedback-form" class="review-form">
+          <div class="review-picked" id="picked-stars" aria-hidden="true"></div>
+          <label>
+            <span>Name</span>
+            <input type="text" name="name" required autocomplete="name" placeholder="Your name">
+          </label>
+          <label>
+            <span>Email</span>
+            <input type="email" name="email" required autocomplete="email" placeholder="you@email.com">
+          </label>
+          <label>
+            <span>Phone <em>(optional)</em></span>
+            <input type="tel" name="phone" autocomplete="tel" placeholder="(225) 555-1234">
+          </label>
+          <label>
+            <span>How can we improve?</span>
+            <textarea name="feedback" required rows="4" placeholder="Tell us what went wrong or what we could do better..."></textarea>
+          </label>
+          <p class="review-error" id="feedback-error" hidden></p>
+          <button class="review-submit" type="submit">Submit Feedback</button>
+          <button class="review-back" type="button" id="change-rating">← Change rating</button>
+        </form>
+      </div>
+
+      <div id="thanks-step" hidden>
+        <div class="review-thanks">
+          <div class="review-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h2>Thank you</h2>
+          <p>We appreciate you taking the time to share your feedback. We’ll use it to improve.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    const GOOGLE_REVIEW_URL = "https://g.page/r/CVyGr3cRilbAEBM/review";
+
+    const rateStep = document.getElementById("rate-step");
+    const feedbackStep = document.getElementById("feedback-step");
+    const thanksStep = document.getElementById("thanks-step");
+    const choices = document.getElementById("star-choices");
+    const picked = document.getElementById("picked-stars");
+    const form = document.getElementById("feedback-form");
+    const errorEl = document.getElementById("feedback-error");
+    let rating = 0;
+
+    function stars(count) {
+      return "★".repeat(count);
+    }
+
+    for (let count = 5; count >= 1; count -= 1) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "review-choice";
+      button.innerHTML = `<span class="review-stars" aria-hidden="true">${stars(count)}</span><span>${count} ${count === 1 ? "star" : "stars"}</span>`;
+      button.addEventListener("click", () => choose(count));
+      choices.appendChild(button);
+    }
+
+    function show(step) {
+      rateStep.hidden = step !== "rate";
+      feedbackStep.hidden = step !== "feedback";
+      thanksStep.hidden = step !== "thanks";
+    }
+
+    function choose(count) {
+      rating = count;
+      if (count >= 4) {
+        window.location.href = GOOGLE_REVIEW_URL;
+        return;
+      }
+      picked.textContent = stars(count);
+      errorEl.hidden = true;
+      show("feedback");
+    }
+
+    document.getElementById("change-rating").addEventListener("click", () => {
+      rating = 0;
+      form.reset();
+      show("rate");
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = form.querySelector(".review-submit");
+      const data = new FormData(form);
+      errorEl.hidden = true;
+      button.disabled = true;
+      button.textContent = "Sending...";
+
+      const payload = {
+        name: String(data.get("name") || "").trim(),
+        email: String(data.get("email") || "").trim(),
+        phone: String(data.get("phone") || "").trim(),
+        message: `${rating}-star private feedback\n\n${String(data.get("feedback") || "").trim()}`,
+        source: "Private Review Feedback",
+        formName: "Review page",
+        formPlacement: "review",
+        service: "Private review feedback",
+        pagePath: "/review-us/",
+        pageUrl: window.location.href
+      };
+
+      try {
+        const res = await fetch("/.netlify/functions/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok || body.error) throw new Error(body.error || "Request failed");
+        show("thanks");
+      } catch {
+        errorEl.textContent = "Something went wrong. Please try again or email support@capitalwaterco.com.";
+        errorEl.hidden = false;
+        button.disabled = false;
+        button.textContent = "Submit Feedback";
+      }
+    });
+  </script>
+</body>
+</html>
