@@ -2202,8 +2202,14 @@ body.ads-page .hero-phone a {
 }
 
 @media (max-width: 860px) {
+  body.review-page .header-cta,
   body.ads-page.is-landing .header-cta {
     display: none;
+  }
+
+  body.review-page .logo img {
+    width: 210px;
+    max-width: min(210px, calc(100vw - 40px));
   }
 
   body.ads-page .logo img {
@@ -2238,11 +2244,13 @@ body.ads-page .hero-phone a {
 
 .review-page {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #021a33;
 }
 
 .review-stage {
-  min-height: 100vh;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
