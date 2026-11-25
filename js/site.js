@@ -348,6 +348,23 @@ function footerHTML() {
   </footer>`;
 }
 
+function trackFreeConsultationConversion(form, payload) {
+  const consultationPath = /\/free-consultation\/?$/;
+  const onConsultationPage = consultationPath.test(window.location.pathname);
+  const isConsultationForm =
+    document.body.classList.contains("ads-page") &&
+    (document.body.dataset.formSource || "") === "Google Ads" &&
+    payload.formPlacement === "hero" &&
+    consultationPath.test(payload.pagePath || "");
+  if (!onConsultationPage || !isConsultationForm || form.dataset.adsConversionSent === "true") return;
+  form.dataset.adsConversionSent = "true";
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  window.gtag("event", "conversion", {
+    send_to: "AW-16856191117/kjvoCLiDt78dEI2h1OU-",
+  });
+}
+
 function captureAttribution() {
   const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "gbraid", "wbraid"];
   let stored = {};
@@ -510,6 +527,7 @@ document.addEventListener("DOMContentLoaded", () => {
           form: payload.source,
           service: payload.service || "",
         });
+        trackFreeConsultationConversion(form, payload);
         form.classList.add("is-sent");
         if (success) {
           success.style.display = "";
